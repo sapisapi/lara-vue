@@ -1936,10 +1936,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      user: ''
+      user: '',
+      tests: []
     };
   },
   methods: {
@@ -1951,6 +1968,9 @@ __webpack_require__.r(__webpack_exports__);
           name: 'Home'
         });
       });
+    },
+    toggle_switch: function toggle_switch(e) {
+      e.show_answer = !e.show_answer;
     }
   },
   mounted: function mounted() {
@@ -1958,6 +1978,9 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/api/user').then(function (res) {
       _this2.user = res.data;
+    }), axios.get('/api/test').then(function (res) {
+      var self = _this2;
+      self.tests = res.data;
     });
   }
 });
@@ -37746,10 +37769,66 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._v("\n    Dashboard\n    name: " + _vm._s(_vm.user.name) + " "),
+    _vm._v(
+      "\n    Dashboard\n    id:" +
+        _vm._s(_vm.user.id) +
+        "\n    name: " +
+        _vm._s(_vm.user.name) +
+        " "
+    ),
     _c("br"),
     _vm._v(" \n    email: " + _vm._s(_vm.user.email) + " "),
     _c("br"),
+    _vm._v(" "),
+    _c("div", [
+      _c(
+        "ul",
+        _vm._l(_vm.tests, function(test) {
+          return _c("li", { key: test.id }, [
+            _c("p", {
+              domProps: {
+                innerHTML: _vm._s(
+                  test.content_0 + test.question + test.content_1
+                )
+              }
+            }),
+            _vm._v(" "),
+            test.show_answer === true
+              ? _c("div", [
+                  _c(
+                    "button",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.toggle_switch(test)
+                        }
+                      }
+                    },
+                    [_vm._v("隠す")]
+                  )
+                ])
+              : _c("div", [
+                  _c(
+                    "button",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.toggle_switch(test)
+                        }
+                      }
+                    },
+                    [_vm._v("答え合わせ")]
+                  )
+                ]),
+            _vm._v(" "),
+            test.show_answer === true
+              ? _c("p", [_vm._v(_vm._s(test.answer))])
+              : _vm._e()
+          ])
+        }),
+        0
+      )
+    ]),
     _vm._v(" "),
     _c(
       "button",

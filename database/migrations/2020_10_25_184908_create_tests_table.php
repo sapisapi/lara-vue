@@ -21,6 +21,8 @@ class CreateTestsTable extends Migration
             $table->string('question');
             $table->text('content_1');
             $table->string('answer');
+            $table->boolean('show_answer')->default(0);
+            $table->boolean('completed')->default(0);
             $table->timestamps();
         });
     }
