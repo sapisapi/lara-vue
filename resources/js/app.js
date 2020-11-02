@@ -10,6 +10,9 @@ window.Vue = require('vue');
 
 import VueRouter from 'vue-router';
 import routes from './routes';
+import Form from './Form'
+
+window.Form = Form
 
 Vue.use(VueRouter);
 

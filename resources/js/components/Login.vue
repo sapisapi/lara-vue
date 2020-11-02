@@ -30,7 +30,7 @@
         methods:{
             loginUser(){
                 axios.post('/api/login', this.form).then(() => {
-                    this.$router.push({name: "Dashboard"});
+                    this.$router.push({name: "List"});
                 }).catch((error) => {
                     this.errors = error.response.data.errors;
                 })

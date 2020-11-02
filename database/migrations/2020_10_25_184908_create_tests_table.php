@@ -14,12 +14,12 @@ class CreateTestsTable extends Migration
     public function up()
     {
         Schema::create('tests', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->text('content_0');
+            $table->id();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('title_id')->constrained('titles')->onDelete('cascade');
+            $table->text('content_0')->nullable();
             $table->string('question');
-            $table->text('content_1');
+            $table->text('content_1')->nullable();
             $table->string('answer');
             $table->boolean('show_answer')->default(0);
             $table->boolean('completed')->default(0);

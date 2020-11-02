@@ -11,12 +11,20 @@ class Test extends Model
      return $this->belongsTo('App\User');
    }
 
+   public function title()
+   {
+     return $this->belongsTo('App\Title');
+   }
+
+
    protected $fillable = [
     'user_id',
+    'title_id',
     'content_0',
     'question',
     'content_1',
-    'answer'
+    'answer',
+    'completed'
   ];
 
 }

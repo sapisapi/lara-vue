@@ -1952,11 +1952,69 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       user: '',
-      tests: []
+      tests: [],
+      form: new Form({
+        content_0: '',
+        question: '',
+        content_1: '',
+        answer: ''
+      })
     };
   },
   methods: {
@@ -1971,17 +2029,57 @@ __webpack_require__.r(__webpack_exports__);
     },
     toggle_switch: function toggle_switch(e) {
       e.show_answer = !e.show_answer;
+    },
+    toggle_comp: function toggle_comp(e) {
+      e.completed = !e.completed;
+      var data = new FormData();
+      data.append('_method', 'PATCH');
+
+      if (e.completed == true) {
+        data.append('completed', 1);
+      }
+
+      if (e.completed == false) {
+        data.append('completed', 0);
+      }
+
+      axios.post('/api/test/' + e.id, data);
+    },
+    getTests: function getTests() {
+      var _this2 = this;
+
+      axios.get('/api/show_test/' + this.$route.params.id).then(function (res) {
+        var self = _this2;
+        self.tests = res.data;
+        console.log(_this2.$route.params.id);
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    saveData: function saveData() {
+      var _this3 = this;
+
+      var data = new FormData();
+      data.append('user_id', this.user.id);
+      data.append('content_0', this.form.content_0);
+      data.append('question', this.form.question);
+      data.append('content_1', this.form.content_1);
+      data.append('answer', this.form.answer);
+      axios.post('/api/test', data).then(function (res) {
+        _this3.form.reset();
+
+        _this3.getTests();
+      })["catch"](function (error) {
+        _this3.form.errors.record(error.response.data.errors);
+      });
     }
   },
   mounted: function mounted() {
-    var _this2 = this;
+    var _this4 = this;
 
     axios.get('/api/user').then(function (res) {
-      _this2.user = res.data;
-    }), axios.get('/api/test').then(function (res) {
-      var self = _this2;
-      self.tests = res.data;
-    });
+      _this4.user = res.data;
+    }), this.getTests();
   }
 });
 
@@ -2003,6 +2101,90 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/List.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/List.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      user: '',
+      lists: [],
+      form: new Form({
+        title: ''
+      })
+    };
+  },
+  methods: {
+    saveData: function saveData() {
+      var _this = this;
+
+      var data = new FormData();
+      data.append('user_id', this.user.id);
+      data.append('title', this.form.title);
+      axios.post('/api/list', data).then(function (res) {
+        _this.form.reset();
+
+        _this.getLists();
+      })["catch"](function (error) {
+        _this.form.errors.record(error.response.data.errors);
+      });
+    },
+    getLists: function getLists() {
+      var _this2 = this;
+
+      axios.get('/api/show_list').then(function (res) {
+        var self = _this2;
+        self.lists = res.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    }
+  },
+  mounted: function mounted() {
+    var _this3 = this;
+
+    axios.get('/api/user').then(function (res) {
+      _this3.user = res.data;
+    }), this.getLists();
+  }
+});
 
 /***/ }),
 
@@ -2049,7 +2231,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.post('/api/login', this.form).then(function () {
         _this.$router.push({
-          name: "Dashboard"
+          name: "List"
         });
       })["catch"](function (error) {
         _this.errors = error.response.data.errors;
@@ -37769,61 +37951,104 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._v(
-      "\n    Dashboard\n    id:" +
-        _vm._s(_vm.user.id) +
-        "\n    name: " +
-        _vm._s(_vm.user.name) +
-        " "
-    ),
-    _c("br"),
-    _vm._v(" \n    email: " + _vm._s(_vm.user.email) + " "),
-    _c("br"),
-    _vm._v(" "),
     _c("div", [
       _c(
         "ul",
         _vm._l(_vm.tests, function(test) {
           return _c("li", { key: test.id }, [
-            _c("p", {
-              domProps: {
-                innerHTML: _vm._s(
-                  test.content_0 + test.question + test.content_1
-                )
-              }
-            }),
-            _vm._v(" "),
-            test.show_answer === true
+            test.content_1 == null && test.content_0 == null
+              ? _c("div", [_c("strong", [_vm._v(_vm._s(test.question))])])
+              : test.content_1 == null
               ? _c("div", [
-                  _c(
-                    "button",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.toggle_switch(test)
-                        }
-                      }
-                    },
-                    [_vm._v("隠す")]
-                  )
+                  _c("p", [
+                    _vm._v(_vm._s(test.content_0)),
+                    _c("strong", [_vm._v(_vm._s(test.question))])
+                  ])
+                ])
+              : test.content_0 == null
+              ? _c("div", [
+                  _c("p", [
+                    _c("strong", [_vm._v(_vm._s(test.question))]),
+                    _vm._v(_vm._s(test.content_1))
+                  ])
                 ])
               : _c("div", [
-                  _c(
-                    "button",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.toggle_switch(test)
-                        }
-                      }
-                    },
-                    [_vm._v("答え合わせ")]
-                  )
+                  _c("p", [
+                    _vm._v(_vm._s(test.content_0)),
+                    _c("strong", [_vm._v(_vm._s(test.question))]),
+                    _vm._v(_vm._s(test.content_1))
+                  ])
                 ]),
             _vm._v(" "),
             test.show_answer === true
-              ? _c("p", [_vm._v(_vm._s(test.answer))])
-              : _vm._e()
+              ? _c("div", [
+                  _c("p", [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(test.answer) +
+                        "\n                    "
+                    )
+                  ])
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticStyle: { display: "inline-block" } }, [
+              test.show_answer == true
+                ? _c("div", [
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.toggle_switch(test)
+                          }
+                        }
+                      },
+                      [_vm._v("隠す")]
+                    )
+                  ])
+                : _c("div", [
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.toggle_switch(test)
+                          }
+                        }
+                      },
+                      [_vm._v("答え合わせ")]
+                    )
+                  ]),
+              _vm._v(" "),
+              test.completed == true
+                ? _c("div", [
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.toggle_comp(test)
+                          }
+                        }
+                      },
+                      [_vm._v("やっぱり心配")]
+                    )
+                  ])
+                : _c("div", [
+                    _c(
+                      "button",
+                      {
+                        on: {
+                          click: function($event) {
+                            return _vm.toggle_comp(test)
+                          }
+                        }
+                      },
+                      [_vm._v("完璧")]
+                    )
+                  ])
+            ])
           ])
         }),
         0
@@ -37841,10 +38066,195 @@ var render = function() {
         }
       },
       [_vm._v("Logout")]
-    )
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "container" }, [
+      _c(
+        "form",
+        {
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.saveData($event)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "input-group mb-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.content_0,
+                  expression: "form.content_0"
+                }
+              ],
+              staticClass: "form-control form-control-lg",
+              class: { "is-invalid": _vm.form.errors.has("content_0") },
+              attrs: {
+                type: "text",
+                "aria-label": "Recipient's username",
+                "aria-describedby": "button-addon2",
+                placeholder: "最初の文：例->白い"
+              },
+              domProps: { value: _vm.form.content_0 },
+              on: {
+                keydown: function($event) {
+                  return _vm.form.errors.clear("content_0")
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "content_0", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group mb-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.question,
+                  expression: "form.question"
+                }
+              ],
+              staticClass: "form-control form-control-lg",
+              class: { "is-invalid": _vm.form.errors.has("question") },
+              attrs: {
+                type: "text",
+                "aria-label": "Recipient's username",
+                "aria-describedby": "button-addon2",
+                placeholder: "問題：例->ぬの"
+              },
+              domProps: { value: _vm.form.question },
+              on: {
+                keydown: function($event) {
+                  return _vm.form.errors.clear("question")
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "question", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.form.errors.has("question")
+              ? _c("p", {
+                  staticClass: "text-danger pt-3 pb-3",
+                  staticStyle: { "font-size": "20px" },
+                  domProps: {
+                    textContent: _vm._s(_vm.form.errors.get("question"))
+                  }
+                })
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group mb-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.content_1,
+                  expression: "form.content_1"
+                }
+              ],
+              staticClass: "form-control form-control-lg",
+              class: { "is-invalid": _vm.form.errors.has("content_1") },
+              attrs: {
+                type: "text",
+                "aria-label": "Recipient's username",
+                "aria-describedby": "button-addon2",
+                placeholder: "後の文：例->を買う"
+              },
+              domProps: { value: _vm.form.content_1 },
+              on: {
+                keydown: function($event) {
+                  return _vm.form.errors.clear("content_1")
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "content_1", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-group mb-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.answer,
+                  expression: "form.answer"
+                }
+              ],
+              staticClass: "form-control form-control-lg",
+              class: { "is-invalid": _vm.form.errors.has("answer") },
+              attrs: {
+                type: "text",
+                "aria-label": "Recipient's username",
+                "aria-describedby": "button-addon2",
+                placeholder: "答え：例->布"
+              },
+              domProps: { value: _vm.form.answer },
+              on: {
+                keydown: function($event) {
+                  return _vm.form.errors.clear("answer")
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "answer", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.form.errors.has("answer")
+              ? _c("p", {
+                  staticClass: "text-danger pt-3 pb-3",
+                  staticStyle: { "font-size": "20px" },
+                  domProps: {
+                    textContent: _vm._s(_vm.form.errors.get("answer"))
+                  }
+                })
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _vm._m(0)
+        ]
+      )
+    ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-success container",
+          attrs: { type: "submit", id: "button-addon2" }
+        },
+        [_vm._v("追加する")]
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -37869,6 +38279,125 @@ var render = function() {
   return _c("div", [_vm._v("\n    Home Page\n")])
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/List.vue?vue&type=template&id=1856aeee&":
+/*!*******************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/List.vue?vue&type=template&id=1856aeee& ***!
+  \*******************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "ul",
+      _vm._l(_vm.lists, function(list) {
+        return _c(
+          "li",
+          { key: list.id },
+          [
+            _c(
+              "router-link",
+              { attrs: { to: { name: "Dashboard", params: { id: list.id } } } },
+              [_c("p", [_vm._v(_vm._s(list.title))])]
+            )
+          ],
+          1
+        )
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "container" }, [
+      _c(
+        "form",
+        {
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.saveData($event)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "input-group mb-3" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.form.title,
+                  expression: "form.title"
+                }
+              ],
+              staticClass: "form-control form-control-lg",
+              class: { "is-invalid": _vm.form.errors.has("title") },
+              attrs: {
+                type: "text",
+                "aria-label": "Recipient's username",
+                "aria-describedby": "button-addon2",
+                placeholder: "タイトル"
+              },
+              domProps: { value: _vm.form.title },
+              on: {
+                keydown: function($event) {
+                  return _vm.form.errors.clear("title")
+                },
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.form, "title", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.form.errors.has("title")
+              ? _c("p", {
+                  staticClass: "text-danger pt-3 pb-3",
+                  staticStyle: { "font-size": "20px" },
+                  domProps: {
+                    textContent: _vm._s(_vm.form.errors.get("title"))
+                  }
+                })
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _vm._m(0)
+        ]
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "input-group-append" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-success container",
+          attrs: { type: "submit", id: "button-addon2" }
+        },
+        [_vm._v("追加する")]
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -53395,6 +53924,243 @@ module.exports = function(module) {
 
 /***/ }),
 
+/***/ "./resources/js/Form.js":
+/*!******************************!*\
+  !*** ./resources/js/Form.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Errors = /*#__PURE__*/function () {
+  /**
+   * Create a new Errors instance.
+   */
+  function Errors() {
+    _classCallCheck(this, Errors);
+
+    this.errors = {};
+  }
+  /**
+   * Determine if an errors exists for the given field.
+   *
+   * @param {string} field
+   */
+
+
+  _createClass(Errors, [{
+    key: "has",
+    value: function has(field) {
+      return this.errors.hasOwnProperty(field);
+    }
+    /**
+     * Determine if we have any errors.
+     */
+
+  }, {
+    key: "any",
+    value: function any() {
+      return Object.keys(this.errors).length > 0;
+    }
+    /**
+     * Retrieve the error message for a field.
+     *
+     * @param {string} field
+     */
+
+  }, {
+    key: "get",
+    value: function get(field) {
+      if (this.errors[field]) {
+        return this.errors[field][0];
+      }
+    }
+    /**
+     * Record the new errors.
+     *
+     * @param {object} errors
+     */
+
+  }, {
+    key: "record",
+    value: function record(errors) {
+      this.errors = errors;
+    }
+    /**
+     * Clear one or all error fields.
+     *
+     * @param {string|null} field
+     */
+
+  }, {
+    key: "clear",
+    value: function clear(field) {
+      if (field) {
+        delete this.errors[field];
+        return;
+      }
+
+      this.errors = {};
+    }
+  }]);
+
+  return Errors;
+}();
+
+var Form = /*#__PURE__*/function () {
+  /**
+   * Create a new Form instance.
+   *
+   * @param {object} data
+   */
+  function Form(data) {
+    _classCallCheck(this, Form);
+
+    this.originalData = data;
+
+    for (var field in data) {
+      this[field] = data[field];
+    }
+
+    this.errors = new Errors();
+  }
+  /**
+   * Fetch all relevant data for the form.
+   */
+
+
+  _createClass(Form, [{
+    key: "data",
+    value: function data() {
+      var data = {};
+
+      for (var property in this.originalData) {
+        data[property] = this[property];
+      }
+
+      return data;
+    }
+    /**
+     * Reset the form fields.
+     */
+
+  }, {
+    key: "reset",
+    value: function reset() {
+      for (var field in this.originalData) {
+        this[field] = '';
+      }
+
+      this.errors.clear();
+    }
+    /**
+     * Send a POST request to the given URL.
+     * .
+     * @param {string} url
+     */
+
+  }, {
+    key: "post",
+    value: function post(url) {
+      return this.submit('post', url);
+    }
+    /**
+     * Send a PUT request to the given URL.
+     * .
+     * @param {string} url
+     */
+
+  }, {
+    key: "put",
+    value: function put(url) {
+      return this.submit('put', url);
+    }
+    /**
+     * Send a PATCH request to the given URL.
+     * .
+     * @param {string} url
+     */
+
+  }, {
+    key: "patch",
+    value: function patch(url) {
+      return this.submit('patch', url);
+    }
+    /**
+     * Send a DELETE request to the given URL.
+     * .
+     * @param {string} url
+     */
+
+  }, {
+    key: "delete",
+    value: function _delete(url) {
+      return this.submit('delete', url);
+    }
+    /**
+     * Submit the form.
+     *
+     * @param {string} requestType
+     * @param {string} url
+     */
+
+  }, {
+    key: "submit",
+    value: function submit(requestType, url) {
+      var _this = this;
+
+      return new Promise(function (resolve, reject) {
+        axios[requestType](url, _this.data()).then(function (response) {
+          _this.onSuccess(response.data);
+
+          resolve(response.data);
+        })["catch"](function (error) {
+          _this.onFail(error.response.data);
+
+          reject(error.response.data);
+        });
+      });
+    }
+    /**
+     * Handle a successful form submission.
+     *
+     * @param {object} data
+     */
+
+  }, {
+    key: "onSuccess",
+    value: function onSuccess(data) {
+      alert(data.message); // temporary
+
+      this.reset();
+    }
+    /**
+     * Handle a failed form submission.
+     *
+     * @param {object} errors
+     */
+
+  }, {
+    key: "onFail",
+    value: function onFail(errors) {
+      this.errors.record(errors);
+    }
+  }]);
+
+  return Form;
+}();
+
+/* harmony default export */ __webpack_exports__["default"] = (Form);
+
+/***/ }),
+
 /***/ "./resources/js/app.js":
 /*!*****************************!*\
   !*** ./resources/js/app.js ***!
@@ -53406,6 +54172,7 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_router__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-router */ "./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./routes */ "./resources/js/routes.js");
+/* harmony import */ var _Form__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Form */ "./resources/js/Form.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -53416,6 +54183,8 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 
 
+
+window.Form = _Form__WEBPACK_IMPORTED_MODULE_2__["default"];
 Vue.use(vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]);
 /**
  * The following block of code may be used to automatically register your
@@ -53693,6 +54462,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/List.vue":
+/*!******************************************!*\
+  !*** ./resources/js/components/List.vue ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _List_vue_vue_type_template_id_1856aeee___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./List.vue?vue&type=template&id=1856aeee& */ "./resources/js/components/List.vue?vue&type=template&id=1856aeee&");
+/* harmony import */ var _List_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./List.vue?vue&type=script&lang=js& */ "./resources/js/components/List.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _List_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _List_vue_vue_type_template_id_1856aeee___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _List_vue_vue_type_template_id_1856aeee___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/List.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/List.vue?vue&type=script&lang=js&":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/List.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_List_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./List.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/List.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_List_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/List.vue?vue&type=template&id=1856aeee&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/List.vue?vue&type=template&id=1856aeee& ***!
+  \*************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_List_vue_vue_type_template_id_1856aeee___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./List.vue?vue&type=template&id=1856aeee& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/List.vue?vue&type=template&id=1856aeee&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_List_vue_vue_type_template_id_1856aeee___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_List_vue_vue_type_template_id_1856aeee___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/Login.vue":
 /*!*******************************************!*\
   !*** ./resources/js/components/Login.vue ***!
@@ -53913,10 +54751,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_About__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/About */ "./resources/js/components/About.vue");
 /* harmony import */ var _components_Register__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/Register */ "./resources/js/components/Register.vue");
 /* harmony import */ var _components_Login__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Login */ "./resources/js/components/Login.vue");
-/* harmony import */ var _components_Dashboard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Dashboard */ "./resources/js/components/Dashboard.vue");
-/* harmony import */ var _components_Notfound__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/Notfound */ "./resources/js/components/Notfound.vue");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _components_List__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/List */ "./resources/js/components/List.vue");
+/* harmony import */ var _components_Dashboard__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/Dashboard */ "./resources/js/components/Dashboard.vue");
+/* harmony import */ var _components_Notfound__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/Notfound */ "./resources/js/components/Notfound.vue");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_7__);
+
 
 
 
@@ -53928,7 +54768,7 @@ __webpack_require__.r(__webpack_exports__);
   mode: 'history',
   routes: [{
     path: '*',
-    component: _components_Notfound__WEBPACK_IMPORTED_MODULE_7__["default"]
+    component: _components_Notfound__WEBPACK_IMPORTED_MODULE_6__["default"]
   }, {
     path: '/',
     component: _components_Home__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -53944,9 +54784,22 @@ __webpack_require__.r(__webpack_exports__);
     component: _components_Login__WEBPACK_IMPORTED_MODULE_3__["default"],
     name: 'Login'
   }, {
-    path: '/dashboard',
-    component: _components_Dashboard__WEBPACK_IMPORTED_MODULE_4__["default"],
+    path: '/dashboard/:id',
+    component: _components_Dashboard__WEBPACK_IMPORTED_MODULE_5__["default"],
     name: 'Dashboard',
+    beforeEnter: function beforeEnter(to, form, next) {
+      axios.get('/api/authenticated').then(function () {
+        next();
+      })["catch"](function () {
+        return next({
+          name: 'Login'
+        });
+      });
+    }
+  }, {
+    path: '/list',
+    component: _components_List__WEBPACK_IMPORTED_MODULE_4__["default"],
+    name: 'List',
     beforeEnter: function beforeEnter(to, form, next) {
       axios.get('/api/authenticated').then(function () {
         next();
